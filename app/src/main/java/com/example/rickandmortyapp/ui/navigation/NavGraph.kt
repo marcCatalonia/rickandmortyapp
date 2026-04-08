@@ -26,7 +26,7 @@ fun NavGraph(paddingValues: PaddingValues){
             route = "${Screen.Detail.route}/{characterId}",
             arguments = listOf(
                 navArgument("characterId"){ type = NavType.IntType}
-            )) { backStackEntry ->
+            )) {
             CharacterDetailScreen(paddingValues)
         }
     }
