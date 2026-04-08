@@ -2,10 +2,8 @@ package com.example.rickandmortyapp.ui.screens.characters
 
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,11 +33,10 @@ import com.example.rickandmortyapp.ui.navigation.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CharactersScreen(charactersViewModel: CharactersViewModel = hiltViewModel(), paddingValues: PaddingValues, navController: NavController) {
-    //val charactersUiState by charactersViewModel.uiState.collectAsState()
-
-    //Log.d("CaharacterScreen", "CharactersScreen: charactersUiState $charactersUiState")
-
+fun CharactersScreen(
+    charactersViewModel: CharactersViewModel = hiltViewModel(),
+    navController: NavController
+) {
     val charactersList = charactersViewModel.characters.collectAsLazyPagingItems()
 
     Log.d("CaharacterScreen", "CharactersScreen: charactersUiState ${charactersList.loadState}")
@@ -52,19 +49,24 @@ fun CharactersScreen(charactersViewModel: CharactersViewModel = hiltViewModel(),
         topBar = {
             TopAppBar(
                 title = {
-                    Text(stringResource(R.string.characters_list_to_bar), fontWeight = FontWeight.Bold, color = Color.White)
+                    Text(
+                        stringResource(R.string.characters_list_to_bar),
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
                 },
-                colors = TopAppBarDefaults.topAppBarColors().copy(containerColor =  Color(0xFF181A20))
+                colors = TopAppBarDefaults.topAppBarColors()
+                    .copy(containerColor = Color(0xFF181A20))
             )
         }
-    ) { it
-
-
-        when(charactersList.loadState.refresh){
+    ) {
+        when (charactersList.loadState.refresh) {
             is LoadState.Loading -> {
-                Column(modifier = Modifier.fillMaxSize(),
+                Column(
+                    modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally) {
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     CircularProgressIndicator()
                 }
 
@@ -73,11 +75,16 @@ fun CharactersScreen(charactersViewModel: CharactersViewModel = hiltViewModel(),
 
             is LoadState.Error -> {
 
-                Column(modifier = Modifier.fillMaxSize(),
+                Column(
+                    modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally) {
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
-                    Text(text = stringResource(R.string.error_carga_mensaje), fontWeight = FontWeight.Bold)
+                    Text(
+                        text = stringResource(R.string.error_carga_mensaje),
+                        fontWeight = FontWeight.Bold
+                    )
                     Button(onClick = { charactersList.retry() }) { Text(stringResource(R.string.descargar)) }
                 }
 
@@ -90,12 +97,7 @@ fun CharactersScreen(charactersViewModel: CharactersViewModel = hiltViewModel(),
                 Log.d("CharactersScreen", "CharactersScreen: show list")
             }
         }
-
-
-
     }
-
-
 }
 
 
@@ -103,31 +105,22 @@ fun CharactersScreen(charactersViewModel: CharactersViewModel = hiltViewModel(),
 fun ShowCharacters(
     charactersList: LazyPagingItems<Character>,
     navController: NavController
-){
-    LazyColumn(modifier = Modifier
-        .fillMaxWidth()
-        .background(color = Color(0xFF181A20))
-        ,
-        horizontalAlignment = Alignment.CenterHorizontally) {
-        items(charactersList.itemCount){ index ->
+) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = Color(0xFF181A20)),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        items(charactersList.itemCount) { index ->
             val character = charactersList[index]
             character?.let {
                 CardCharacterItem(it) { navController.navigate("${Screen.Detail.route}/${it.id}") }
             }
         }
 
-        if(charactersList.loadState.append is LoadState.Loading){
+        if (charactersList.loadState.append is LoadState.Loading) {
             item { CircularProgressIndicator() }
         }
     }
-}
-
-
-@Composable
-fun CharacterItem(
-    character: Character,
-    onClick: () -> Unit
-){
-    Text(modifier = Modifier.clickable(onClick = { onClick() }), text = character.name)
-
 }

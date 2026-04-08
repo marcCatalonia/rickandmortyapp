@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,7 +16,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,39 +34,6 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.rickandmortyapp.R
 import com.example.rickandmortyapp.domain.model.Character
-
-@Composable
-fun CardCharacterItemOld(
-    character: Character = Character(
-        id = 1,
-        name = "Morty Smith",
-        status = "Alive",
-        type = "",
-        gender = "Male",
-        species = "Human",
-        imageUrl = "https://rickandmortyapi.com/api/character/avatar/2.jpeg",
-        origin = "Earth",
-        location = "Earth"
-    ),
-    onClick: () -> Unit
-){
-    Card(
-        modifier = Modifier.fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 6.dp)
-            .clickable{ onClick() },
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF1E1E1E)
-        ),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Row(modifier = Modifier.fillMaxSize()) {
-            CharacterImage(image = character.imageUrl)
-            CharacterInfo(character)
-        }
-    }
-}
-
-
 
 @Composable
 fun CardCharacterItem(
@@ -182,33 +147,6 @@ private fun CharacterOverlayInfo(character: Character) {
     }
 }
 
-@Composable
-private fun CharacterInfo(character: Character) {
-    Column(
-        modifier = Modifier
-            .padding(12.dp)
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center
-    ) {
-
-        Text(
-            text = character.name,
-            color = Color.White,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            maxLines = 1
-        )
-
-        Spacer(modifier = Modifier.height(4.dp))
-
-        Text(
-            text = character.species,
-            color = Color.LightGray,
-            fontSize = 14.sp
-        )
-    }
-}
-
 
 
 @Composable
@@ -247,35 +185,6 @@ fun StatusRow(
             fontSize = 14.sp,
             modifier = Modifier
 
-        )
-    }
-}
-
-
-@Composable
-private fun StatusRowOld(status: String) {
-
-    val color = when (status) {
-        "Alive" -> Color.Green
-        "Dead" -> Color.Red
-        else -> Color.Gray
-    }
-
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .size(8.dp)
-                .background(color, CircleShape)
-        )
-
-        Spacer(modifier = Modifier.width(6.dp))
-
-        Text(
-            text = status,
-            color = Color.White,
-            fontSize = 14.sp
         )
     }
 }

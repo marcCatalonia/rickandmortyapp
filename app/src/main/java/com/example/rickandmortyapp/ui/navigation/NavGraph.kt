@@ -2,7 +2,6 @@ package com.example.rickandmortyapp.ui.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavGraph
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,7 +19,7 @@ fun NavGraph(paddingValues: PaddingValues){
         startDestination = Screen.Characters.route){
 
         composable(Screen.Characters.route) {
-            CharactersScreen(paddingValues = paddingValues, navController = navController)
+            CharactersScreen(navController = navController)
         }
 
         composable(
@@ -28,7 +27,6 @@ fun NavGraph(paddingValues: PaddingValues){
             arguments = listOf(
                 navArgument("characterId"){ type = NavType.IntType}
             )) { backStackEntry ->
-            val id = backStackEntry.arguments?.getInt("characterId")
             CharacterDetailScreen(paddingValues)
         }
     }
@@ -37,7 +35,5 @@ fun NavGraph(paddingValues: PaddingValues){
 
 sealed class Screen(val route: String){
     object Characters: Screen("characters")
-    object Detail: Screen("detail"){
-        fun createRoute(id: Int) = "detail/$id"
-    }
+    object Detail: Screen("detail")
 }

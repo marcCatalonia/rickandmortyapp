@@ -28,14 +28,24 @@ import com.example.rickandmortyapp.ui.components.CharacterImage
 import com.example.rickandmortyapp.ui.components.StatusRow
 
 @Composable
-fun CharacterDetailScreen(paddingValues: PaddingValues, characterDetailViewModel: CharacterDetailViewModel = hiltViewModel()){
+fun CharacterDetailScreen(
+    paddingValues: PaddingValues,
+    characterDetailViewModel: CharacterDetailViewModel = hiltViewModel()
+) {
 
     val character = characterDetailViewModel.getCharacterById()
 
-    Scaffold(modifier = Modifier.background(Color(0xFF181A20)).fillMaxSize().padding(paddingValues)) { it ->
+    Scaffold(
+        modifier = Modifier
+            .background(Color(0xFF181A20))
+            .fillMaxSize()
+            .padding(paddingValues)
+    ) {
         character?.let { char ->
             LazyColumn(
-                modifier = Modifier.background(Color(0xFF181A20)).padding(it)
+                modifier = Modifier
+                    .background(Color(0xFF181A20))
+                    .padding(it)
             ) {
 
                 item {
@@ -76,16 +86,12 @@ fun CharacterDetailScreen(paddingValues: PaddingValues, characterDetailViewModel
 }
 
 
-
 @Composable
 private fun CharacterHeader(character: Character) {
 
-   // Box(
 
-   // ) {
-
-
-        CharacterImage(modifier = Modifier
+    CharacterImage(
+        modifier = Modifier
             .fillMaxWidth()
             .height(320.dp)
             .clip(RoundedCornerShape(16.dp))
@@ -93,42 +99,40 @@ private fun CharacterHeader(character: Character) {
                 width = 1.dp,
                 color = Color(0xFF2A2A2A),
                 shape = RoundedCornerShape(16.dp)
-            ), image = character.imageUrl)
+            ), image = character.imageUrl
+    )
 
-        //CharacterGradient()
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp),
+        //.offset(y = 280.dp),
+        shape = RoundedCornerShape(16.dp)
+    ) {
 
-        Card(
+        Column(
             modifier = Modifier
+                .background(color = Color(0xFF20232B))
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-                //.offset(y = 280.dp),
-            shape = RoundedCornerShape(16.dp)
+                .padding(16.dp)
         ) {
 
-            Column(
-                modifier = Modifier
-                    .background(color = Color(0xFF20232B))
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
+            Text(
+                text = character.name,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                style = MaterialTheme.typography.titleLarge
+            )
 
-                Text(
-                    text = character.name,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    style = MaterialTheme.typography.titleLarge
-                )
+            Spacer(modifier = Modifier.height(4.dp))
 
-                Spacer(modifier = Modifier.height(4.dp))
-
-                StatusRow(
-                    status = character.status,
-                    species = character.species
-                )
-            }
+            StatusRow(
+                status = character.status,
+                species = character.species
+            )
         }
-    //}
+    }
 }
 
 
