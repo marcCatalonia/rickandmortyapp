@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import com.example.rickandmortyapp.data.paging.CharactersPagingSource
 import com.example.rickandmortyapp.data.remote.RickyMortyAPI
 import com.example.rickandmortyapp.domain.model.Character
+import com.example.rickandmortyapp.domain.repository.CharactersRepository
 import kotlinx.coroutines.flow.Flow
 
 class CharactersRepositoryImpl(

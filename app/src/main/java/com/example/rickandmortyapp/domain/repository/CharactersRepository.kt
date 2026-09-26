@@ -1,4 +1,4 @@
-package com.example.rickandmortyapp.data.repository
+package com.example.rickandmortyapp.domain.repository
 
 import androidx.paging.PagingData
 import com.example.rickandmortyapp.domain.model.Character

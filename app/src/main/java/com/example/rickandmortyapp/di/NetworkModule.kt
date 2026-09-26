@@ -1,7 +1,7 @@
 package com.example.rickandmortyapp.di
 
 import com.example.rickandmortyapp.data.remote.RickyMortyAPI
-import com.example.rickandmortyapp.data.repository.CharactersRepository
+import com.example.rickandmortyapp.domain.repository.CharactersRepository
 import com.example.rickandmortyapp.data.repository.CharactersRepositoryImpl
 import dagger.Module
 import dagger.Provides
