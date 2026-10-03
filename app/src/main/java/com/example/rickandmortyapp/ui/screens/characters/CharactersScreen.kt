@@ -1,6 +1,5 @@
 package com.example.rickandmortyapp.ui.screens.characters
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,7 +34,7 @@ import com.example.rickandmortyapp.domain.model.Character
 import com.example.rickandmortyapp.ui.components.CardCharacterItem
 import com.example.rickandmortyapp.ui.navigation.Screen
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun CharactersScreen(
     charactersViewModel: CharactersViewModel = hiltViewModel(),
@@ -43,80 +42,97 @@ fun CharactersScreen(
 ) {
     val charactersList = charactersViewModel.characters.collectAsLazyPagingItems()
 
-    Log.d("CaharacterScreen", "CharactersScreen: charactersUiState ${charactersList.loadState}")
-
-
     Scaffold(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(),
         contentWindowInsets = WindowInsets.safeContent,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        stringResource(R.string.characters_list_to_bar),
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors()
-                    .copy(containerColor = Color(0xFF181A20))
-            )
-        }
-    ) { pv->
+        topBar = { TopBar() }
+    ) { pv ->
         when (charactersList.loadState.refresh) {
             is LoadState.Loading -> {
-                Column(
-                    modifier = Modifier.fillMaxSize().padding(pv),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    CircularProgressIndicator()
-                }
-
-                Log.d("CharactersScreen", "CharactersScreen: loading")
+                Loading(pv)
             }
 
             is LoadState.Error -> {
-
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-
-                    Text(
-                        text = stringResource(R.string.error_carga_mensaje),
-                        fontWeight = FontWeight.Bold
-                    )
-                    Button(onClick = { charactersList.retry() }) { Text(stringResource(R.string.descargar)) }
-                }
-
-
-                Log.d("CharactersScreen", "CharactersScreen: retry")
+                Error(pv, charactersList)
             }
 
             else -> {
-                ShowCharacters(charactersList, navController,pv)
-                Log.d("CharactersScreen", "CharactersScreen: show list")
+                ShowCharacters(
+                    charactersList,
+                    navController,
+                    PaddingValues(pv.calculateBottomPadding())
+                )
             }
         }
     }
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TopBar() {
+    TopAppBar(
+        title = {
+            Text(
+                stringResource(R.string.characters_list_to_bar),
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+        },
+        colors = TopAppBarDefaults.topAppBarColors()
+            .copy(containerColor = Color(0xFF181A20))
+    )
+}
+
+
+@Composable
+private fun Loading(pv: PaddingValues) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(pv),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        CircularProgressIndicator()
+    }
+}
+
+
+@Composable
+private fun Error(
+    pv: PaddingValues,
+    charactersList: LazyPagingItems<Character>
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(pv),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Text(
+            text = stringResource(R.string.error_carga_mensaje),
+            fontWeight = FontWeight.Bold
+        )
+        Button(onClick = { charactersList.retry() }) { Text(stringResource(R.string.descargar)) }
+    }
+}
+
 @Composable
 fun ShowCharacters(
     charactersList: LazyPagingItems<Character>,
     navController: NavController,
-    contentPadding: PaddingValues
+    bottomPadding: PaddingValues
 ) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Color(0xFF181A20)),
-        contentPadding = contentPadding,
+            .background(color = Color(0xFF181A20))
+            .padding(bottomPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(charactersList.itemCount) { index ->
