@@ -1,6 +1,5 @@
 package com.example.rickandmortyapp.ui.navigation
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -11,7 +10,7 @@ import com.example.rickandmortyapp.ui.screens.characters.CharactersScreen
 import com.example.rickandmortyapp.ui.screens.detail.CharacterDetailScreen
 
 @Composable
-fun NavGraph(paddingValues: PaddingValues){
+fun NavGraph(){
 
     val navController = rememberNavController()
 
@@ -27,7 +26,7 @@ fun NavGraph(paddingValues: PaddingValues){
             arguments = listOf(
                 navArgument("characterId"){ type = NavType.IntType}
             )) {
-            CharacterDetailScreen(paddingValues)
+            CharacterDetailScreen()
         }
     }
 }

@@ -84,8 +84,7 @@ fun CharacterImage(modifier: Modifier = Modifier, image: String = "https://ricka
         placeholder = painterResource(R.drawable.loading_img),
         error = painterResource(R.drawable.no_image),
         modifier = modifier
-            .width(300.dp)
-            .height(300.dp)
+            .fillMaxSize()
     )
 }
 

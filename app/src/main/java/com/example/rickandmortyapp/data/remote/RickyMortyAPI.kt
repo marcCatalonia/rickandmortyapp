@@ -1,7 +1,9 @@
 package com.example.rickandmortyapp.data.remote
 
+import com.example.rickandmortyapp.data.dto.CharacterDto
 import com.example.rickandmortyapp.data.dto.CharacterResponseDto
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface RickyMortyAPI {
@@ -10,4 +12,9 @@ interface RickyMortyAPI {
     suspend fun getCharacters(
         @Query("page")page: Int
     ): CharacterResponseDto
+
+    @GET("character/{id}")
+    suspend fun getCharacterById(
+        @Path("id")id: Int
+    ): CharacterDto
 }

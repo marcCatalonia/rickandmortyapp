@@ -4,10 +4,13 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -47,6 +50,7 @@ fun CharactersScreen(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(),
+        contentWindowInsets = WindowInsets.safeContent,
         topBar = {
             TopAppBar(
                 title = {
@@ -94,7 +98,7 @@ fun CharactersScreen(
             }
 
             else -> {
-                ShowCharacters(charactersList, navController)
+                ShowCharacters(charactersList, navController,pv)
                 Log.d("CharactersScreen", "CharactersScreen: show list")
             }
         }
@@ -105,12 +109,14 @@ fun CharactersScreen(
 @Composable
 fun ShowCharacters(
     charactersList: LazyPagingItems<Character>,
-    navController: NavController
+    navController: NavController,
+    contentPadding: PaddingValues
 ) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = Color(0xFF181A20)),
+        contentPadding = contentPadding,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(charactersList.itemCount) { index ->

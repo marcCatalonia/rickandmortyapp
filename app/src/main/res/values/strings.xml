@@ -3,4 +3,5 @@
     <string name="characters_list_to_bar">Personajes de Rick y Morty</string>
     <string name="descargar">Descargar</string>
     <string name="error_carga_mensaje">Parece que ha habido un error. Pulsa en descargar.</string>
+    <string name="character_not_found">Personaje no encontrado</string>
 </resources>

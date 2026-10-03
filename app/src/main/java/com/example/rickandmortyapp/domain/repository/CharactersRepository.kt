@@ -9,4 +9,6 @@ interface CharactersRepository{
     fun getCharactersByPage(): Flow<PagingData<Character>>
 
     fun getCachedCharacters(id:Int): Character?
+
+    suspend fun getCharacterById(id: Int): Character?
 }
