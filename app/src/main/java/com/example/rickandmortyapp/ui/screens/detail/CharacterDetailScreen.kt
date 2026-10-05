@@ -26,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -36,7 +35,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.rickandmortyapp.R
 import com.example.rickandmortyapp.domain.model.Character
 import com.example.rickandmortyapp.ui.components.CharacterImage
+import com.example.rickandmortyapp.ui.components.ErrorContent
 import com.example.rickandmortyapp.ui.components.StatusRow
+import com.example.rickandmortyapp.ui.components.toMessageRes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,15 +69,24 @@ fun CharacterDetailScreen(
     ) {
 
         when(val state = uiState){
-            is CharacterDetailUiState.Loading -> {
+            is CharacterDetailUiState.Loading ->
                 LoadingCharacterDetail(it)
-            }
-            is CharacterDetailUiState.Success -> {
+
+            is CharacterDetailUiState.Success ->
                 ShowCharacter(generalModifier, state.character, it)
-            }
-            is CharacterDetailUiState.NotFound -> {
-                Text(text = stringResource(R.string.character_not_found), color = Color.White)
-            }
+
+            is CharacterDetailUiState.NotFound ->
+                ErrorContent(
+                    errorRes = R.string.character_not_found,
+                    modifier = generalModifier,
+                    textColor = Color.White
+                )
+            is CharacterDetailUiState.Error -> ErrorContent(
+                errorRes = state.error.toMessageRes(),
+                modifier = generalModifier,
+                textColor = Color.White,
+                onRetry = { characterDetailViewModel.onRetry() }
+            )
         }
     }
 

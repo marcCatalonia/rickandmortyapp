@@ -4,4 +4,8 @@
     <string name="descargar">Descargar</string>
     <string name="error_carga_mensaje">Parece que ha habido un error. Pulsa en descargar.</string>
     <string name="character_not_found">Personaje no encontrado</string>
+    <string name="try_again">Reintentar</string>
+    <string name="error_no_connection">SIn connexión. Comprueba tu red e inténtalo de nuevo.</string>
+    <string name="error_server">El servidor no responde ahora mismo. Inténtalo más tarde.</string>
+    <string name="error_unknown">Ha ocurrido un error inesperado</string>
 </resources>

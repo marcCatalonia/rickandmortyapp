@@ -1,13 +1,14 @@
 package com.example.rickandmortyapp.data.paging
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.rickandmortyapp.domain.model.Character
 import com.example.rickandmortyapp.data.mapper.toDomain
 import com.example.rickandmortyapp.data.remote.RickyMortyAPI
+import kotlinx.coroutines.CancellationException
 
-class CharactersPagingSource(
+class
+CharactersPagingSource(
     private val api: RickyMortyAPI,
     private val onLoaded: (List<Character>) -> Unit
 ): PagingSource<Int, Character>() {
@@ -22,14 +23,14 @@ class CharactersPagingSource(
 
             onLoaded(characters)
 
-            Log.d("CharactersPagingSource", "load: $response")
-            Log.d("CharactersPagingSource", "load characters: $characters")
             LoadResult.Page(
                 data = characters,
                 prevKey = if(page == 1) null else page - 1,
                 nextKey = if(response.info.next == null) null else page + 1
             )
-        }catch (e: Exception){
+        }catch (e : CancellationException){
+            throw e
+        }  catch (e: Exception){
             LoadResult.Error(e)
         }
     }

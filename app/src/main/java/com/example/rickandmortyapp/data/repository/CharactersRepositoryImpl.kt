@@ -4,10 +4,13 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.rickandmortyapp.data.mapper.toDomain
+import com.example.rickandmortyapp.data.mapper.toDomainError
 import com.example.rickandmortyapp.data.paging.CharactersPagingSource
 import com.example.rickandmortyapp.data.remote.RickyMortyAPI
 import com.example.rickandmortyapp.domain.model.Character
 import com.example.rickandmortyapp.domain.repository.CharactersRepository
+import com.example.rickandmortyapp.domain.result.DataResult
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 
 class CharactersRepositoryImpl(
@@ -36,16 +39,17 @@ class CharactersRepositoryImpl(
         return cache[id]
     }
 
-    override suspend fun getCharacterById(id: Int): Character? {
-        cache[id]?.let { return it }
+    override suspend fun getCharacterById(id: Int): DataResult<Character> {
+        cache[id]?.let { return DataResult.Success(it) }
 
         return try {
             val character = api.getCharacterById(id).toDomain()
             cache[id] = character
-            character
-        }catch (e: Exception){
-            null
+            DataResult.Success(character)
+        }catch (e: CancellationException){
+            throw e
+        } catch (e : Exception){
+            DataResult.Failure(e.toDomainError())
         }
-
     }
 }

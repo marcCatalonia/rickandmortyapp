@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,11 +12,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -24,14 +25,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.rickandmortyapp.R
+import com.example.rickandmortyapp.domain.error.asDomainError
 import com.example.rickandmortyapp.domain.model.Character
 import com.example.rickandmortyapp.ui.components.CardCharacterItem
+import com.example.rickandmortyapp.ui.components.ErrorContent
+import com.example.rickandmortyapp.ui.components.toMessageRes
 import com.example.rickandmortyapp.ui.navigation.Screen
 
 
@@ -55,7 +60,11 @@ fun CharactersScreen(
             }
 
             is LoadState.Error -> {
-                Error(pv, charactersList)
+                ErrorContent(
+                    errorRes = (charactersList.loadState.refresh as LoadState.Error).error.asDomainError().toMessageRes(),
+                    modifier = Modifier.padding(pv),
+                    onRetry = { charactersList.retry() }
+                )
             }
 
             else -> {
@@ -102,27 +111,6 @@ private fun Loading(pv: PaddingValues) {
 
 
 @Composable
-private fun Error(
-    pv: PaddingValues,
-    charactersList: LazyPagingItems<Character>
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(pv),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        Text(
-            text = stringResource(R.string.error_carga_mensaje),
-            fontWeight = FontWeight.Bold
-        )
-        Button(onClick = { charactersList.retry() }) { Text(stringResource(R.string.descargar)) }
-    }
-}
-
-@Composable
 fun ShowCharacters(
     charactersList: LazyPagingItems<Character>,
     navController: NavController,
@@ -145,5 +133,30 @@ fun ShowCharacters(
         if (charactersList.loadState.append is LoadState.Loading) {
             item { CircularProgressIndicator() }
         }
+
+        if (charactersList.loadState.append is LoadState.Error){
+            item {
+                AppendError(
+                    message = stringResource((charactersList.loadState.append as LoadState.Error).error.asDomainError().toMessageRes())
+                ) {
+                    charactersList.retry()
+                }
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun AppendError(message: String, onRetry: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = message, color = Color.White, modifier = Modifier.weight(1f))
+        TextButton(onClick = onRetry) { Text(stringResource(R.string.try_again)) }
     }
 }

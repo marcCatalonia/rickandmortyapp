@@ -85,4 +85,6 @@ dependencies {
     //Paging 3
     implementation("androidx.paging:paging-runtime:3.4.2")
     implementation("androidx.paging:paging-compose:3.4.2")
+
+    testImplementation(libs.kotlinx.coroutines.test)
 }
